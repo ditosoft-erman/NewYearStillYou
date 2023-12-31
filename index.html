@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Time Until 12 AM</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
+  <style>
+    * {
+        background: black;
+        color: white;
+    }
+    #bytes-logo {
+        display: flex;
+        align-items: center;
+        height: 5rem;
+        width:  5rem;
+        transform: translate(10rem, 5rem);
+        position: fixed;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex items-center justify-center">
+  <div class="text-center">
+    <div class="text-4xl mb-4">COUNTDOWN TO 2024</div>
+    <div id="timeUntilMidnight" class="text-8xl font-bold mb-4">--:--:--</div>
+    <img id="bytes-logo" src="bytes.png"/>
+  </div>
+ 
+
+  <script>
+    function calculateTimeUntilMidnight() {
+      const now = new Date();
+      const midnight = new Date();
+      midnight.setHours(24, 0, 0, 0); // Set to midnight
+
+      // Calculate the time difference in milliseconds
+      const timeDifference = midnight - now;
+
+      // Convert milliseconds to hours, minutes, and seconds
+      const hours = Math.floor(timeDifference / (1000 * 60 * 60));
+      const minutes = Math.floor((timeDifference % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((timeDifference % (1000 * 60)) / 1000);
+
+      return { hours, minutes, seconds };
+    }
+
+    function formatTime(hours, minutes, seconds) {
+      return `${hours < 10 ? '0' : ''}${hours}:${minutes < 10 ? '0' : ''}${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+    }
+
+    function updateDisplay() {
+      const timeUntilMidnight = calculateTimeUntilMidnight();
+      const formattedTime = formatTime(timeUntilMidnight.hours, timeUntilMidnight.minutes, timeUntilMidnight.seconds);
+
+      document.getElementById('timeUntilMidnight').innerText = formattedTime;
+    }
+
+    // Update the display every second
+    setInterval(updateDisplay, 1000);
+
+    // Initial update
+    updateDisplay();
+  </script>
+</body>
+</html>
