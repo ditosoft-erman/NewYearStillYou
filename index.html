@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>COUNTDOWN</title>
+  <title>COUNT</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
   <style>
     * {
@@ -22,9 +22,7 @@
 </head>
 <body class="min-h-screen flex items-center justify-center">
   <div class="text-center">
-    <div class="text-4xl mb-4">COUNTDOWN TO 2024</div>
-    <div id="timeUntilMidnight" class="text-8xl font-bold mb-4">--:--:--</div>
-    <img id="bytes-logo" src="bytes.png"/>
+    <div class="text-8xl">HAPPY NEW YEAR</div>
   </div>
  
 
@@ -32,12 +30,11 @@
     function calculateTimeUntilMidnight() {
       const now = new Date();
       const midnight = new Date();
-      midnight.setHours(24, 0, 0, 0); // Set to midnight
-
-      // Calculate the time difference in milliseconds
+      midnight.setHours(24, 0, 0, 0); 
+      
       const timeDifference = midnight - now;
 
-      // Convert milliseconds to hours, minutes, and seconds
+      
       const hours = Math.floor(timeDifference / (1000 * 60 * 60));
       const minutes = Math.floor((timeDifference % (1000 * 60 * 60)) / (1000 * 60));
       const seconds = Math.floor((timeDifference % (1000 * 60)) / 1000);
