@@ -1,10 +1,12 @@
+require('dotenv').config(); // Load .env variables
+
 const express = require('express');
 const nodemailer = require('nodemailer');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 
 const app = express();
-const PORT = 3000; // Default port, change as needed
+const PORT = process.env.PORT || 3000; // Use PORT from .env or default to 3000
 
 // Middleware setup
 app.use(cors());
@@ -12,10 +14,10 @@ app.use(bodyParser.json());
 
 // Nodemailer transporter configuration
 const transporter = nodemailer.createTransport({
-  service: 'Gmail', // Or another email service
+  service: 'Gmail',
   auth: {
-    user: 'ermanfaminiano020@gmail.com', // Replace with your email
-    pass: 'vgyd abld larl twua', // Replace with your email password
+    user: process.env.EMAIL_USER, // Load user from .env
+    pass: process.env.EMAIL_PASS, // Load password from .env
   },
 });
 
@@ -29,10 +31,10 @@ app.post('/send-email', (req, res) => {
   }
 
   const mailOptions = {
-    from: 'your-email@gmail.com', // Sender address
-    to: 'ermanfaminiano020@gmail.com', // Replace with the recipient's email
-    subject: 'New Chat Message', // Subject line
-    text: `You received a new message: ${message}`, // Email body
+    from: process.env.EMAIL_USER, // Sender address
+    to: process.env.EMAIL_TO,     // Recipient address from .env
+    subject: 'New Chat Message',
+    text: `You received a new message: ${message}`,
   };
 
   // Send email
