@@ -3,60 +3,113 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>COUNT</title>
+  <link rel="icon" href="./me.jpg"/>
+  <title>COUNTDOWN 2025</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
   <style>
-    * {
-        background: black;
-        color: white;
+    body {
+      background: linear-gradient(45deg, #F7C4A1, #FF9F80, #FF7F50); /* Peach Fuzz inspired gradient */
+      background-size: 400% 400%;
+      animation: gradientMove 10s ease infinite;
+      color: white;
+      font-family: Arial, sans-serif;
     }
-    #bytes-logo {
-        display: flex;
-        align-items: center;
-        height: 5rem;
-        width:  5rem;
-        transform: translate(10rem, 5rem);
-        position: fixed;
+
+    @keyframes gradientMove {
+      0% {
+        background-position: 0% 50%;
+      }
+      50% {
+        background-position: 100% 50%;
+      }
+      100% {
+        background-position: 0% 50%;
+      }
+    }
+
+    #timeUntilMidnight {
+      font-size: 3rem;
+      margin-top: 1rem;
+    }
+
+    #me-logo {
+      height: 300px;
+      width: 300px;
+      border-radius: 50%;
+      object-fit: cover;
+      box-shadow: 0 0 20px 5px red;
+      transition: box-shadow 0.3s ease-in-out;
+    }
+    
+    #me-logo:hover {
+      box-shadow: 0 0 30px 15px red;
+    }
+
+    #happyNewYear {
+      opacity: 0;
+      transition: opacity 1s ease-in-out;
+      animation: pulse 1.5s infinite;
+    }
+
+    .visible {
+      opacity: 1;
+    }
+
+    @keyframes pulse {
+      0% {
+        transform: scale(1);
+      }
+      50% {
+        transform: scale(1.1);
+      }
+      100% {
+        transform: scale(1);
+      }
     }
   </style>
 </head>
-<body class="min-h-screen flex items-center justify-center">
+<body class="min-h-screen flex flex-col items-center justify-center">
   <div class="text-center">
-    <div class="text-8xl">HAPPY NEW YEAR</div>
+    <div class="flex justify-center p-8">
+      <img id="me-logo" src="./me.jpg" alt="">
+    </div>
+    <div class="text-6xl font-bold p-6">COUNTDOWN 2025</div>
+    <div id="timeUntilMidnight" class="text-3xl mt-4"></div>
+    <div id="happyNewYear" class="text-8xl font-bold mt-4">HAPPY NEW YEAR</div>
   </div>
- 
 
   <script>
     function calculateTimeUntilMidnight() {
       const now = new Date();
-      const midnight = new Date();
-      midnight.setHours(24, 0, 0, 0); 
-      
+      const midnight = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);
+
       const timeDifference = midnight - now;
 
-      
       const hours = Math.floor(timeDifference / (1000 * 60 * 60));
       const minutes = Math.floor((timeDifference % (1000 * 60 * 60)) / (1000 * 60));
       const seconds = Math.floor((timeDifference % (1000 * 60)) / 1000);
 
-      return { hours, minutes, seconds };
+      return { hours, minutes, seconds, timeDifference };
     }
 
     function formatTime(hours, minutes, seconds) {
-      return `${hours < 10 ? '0' : ''}${hours}:${minutes < 10 ? '0' : ''}${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+      return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
     }
 
     function updateDisplay() {
-      const timeUntilMidnight = calculateTimeUntilMidnight();
-      const formattedTime = formatTime(timeUntilMidnight.hours, timeUntilMidnight.minutes, timeUntilMidnight.seconds);
+      const { hours, minutes, seconds, timeDifference } = calculateTimeUntilMidnight();
 
-      document.getElementById('timeUntilMidnight').innerText = formattedTime;
+      if (timeDifference <= 0) {
+        document.getElementById('timeUntilMidnight').innerText = "00:00:00";
+        document.getElementById('happyNewYear').classList.add('visible');
+        clearInterval(timer); 
+      } else {
+        const formattedTime = formatTime(hours, minutes, seconds);
+        document.getElementById('timeUntilMidnight').innerText = formattedTime;
+      }
     }
 
-    // Update the display every second
-    setInterval(updateDisplay, 1000);
-
-    // Initial update
+    const timer = setInterval(updateDisplay, 1000);
     updateDisplay();
   </script>
 </body>
