@@ -66,16 +66,48 @@
         transform: scale(1);
       }
     }
+
+    .chat-bubble {
+      animation: float 2s infinite;
+    }
   </style>
 </head>
 <body class="min-h-screen flex flex-col items-center justify-center">
   <div class="text-center">
     <div class="flex justify-center p-8">
-      <img id="me-logo" src="./me.jpg" alt="">
+      <img id="me-logo" src="./me.jpg" alt=""/>
     </div>
     <div class="text-6xl font-bold p-6">COUNTDOWN 2025</div>
     <div id="timeUntilMidnight" class="text-3xl mt-4"></div>
     <div id="happyNewYear" class="text-8xl font-bold mt-4">HAPPY NEW YEAR</div>
+  </div>
+
+  <!-- Chat Box -->
+  <div id="chatBox" class="fixed bottom-5 right-5 w-80 bg-white border rounded-lg shadow-lg overflow-hidden">
+    <div class="p-3 bg-gray-800 text-white font-bold">Send Greetings</div>
+    <div id="chatContent" class="p-3 h-48 overflow-y-auto space-y-2"></div>
+    <form id="chatForm" class="flex p-3 border-t  flex-col gap-4">
+      <input
+        id="senderEmail"
+        type="text"
+        placeholder="Your name"
+        class="flex-1 border rounded-l-lg px-3 py-2 focus:outline-none text-black"
+       
+      />
+      <input
+        id="chatInput"
+        type="text"
+        placeholder="Type a message..."
+        class="flex-1 border px-3 py-2 focus:outline-none text-black"
+        required
+      />
+      <button
+        type="submit"
+        class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600"
+      >
+        Submit
+      </button>
+    </form>
   </div>
 
   <script>
@@ -111,6 +143,42 @@
 
     const timer = setInterval(updateDisplay, 1000);
     updateDisplay();
+
+    // Chat functionality
+    const chatForm = document.getElementById('chatForm');
+    const chatInput = document.getElementById('chatInput');
+    const senderEmail = document.getElementById('senderEmail');
+    const chatContent = document.getElementById('chatContent');
+
+    chatForm.addEventListener('submit', (event) => {
+      event.preventDefault();
+
+      const messageText = chatInput.value.trim();
+      const email = senderEmail.value.trim();
+      if (messageText && email) {
+        const bubble = document.createElement('div');
+        bubble.classList.add('chat-bubble', 'bg-blue-500', 'text-white', 'p-3', 'rounded-lg', 'w-fit', 'max-w-full', 'self-end', 'mt-2');
+        bubble.textContent = messageText;
+
+        chatContent.appendChild(bubble);
+        chatInput.value = '';
+        chatContent.scrollTop = chatContent.scrollHeight;
+
+        // Send email with message and sender's email
+        fetch('http://localhost:3000/send-email', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ message: messageText, senderEmail: email }),
+        })
+        .then(response => response.json())
+        .then(data => {
+          console.log('Email sent:', data);
+        })
+        .catch(error => {
+          console.error('Error sending email:', error);
+        });
+      }
+    });
   </script>
 </body>
 </html>
